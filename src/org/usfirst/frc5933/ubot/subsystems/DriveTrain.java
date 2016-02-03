@@ -116,12 +116,15 @@ public class DriveTrain extends Subsystem {
      * @param rotate How much the bot is wanted to rotate.
      */
     public void cubicAracdeDrive(double move, double rotate) {
-    	double newMove = move;
+        double newMove = Math.pow(move, 3);
+        double newRotate = Math.pow(rotate, 3);
+        robotDrive.arcadeDrive(newMove, newRotate);
+    }
+    
+    public void ericArcadeDrive(double move, double rotate) {
     	final double ECONSTANT = 1.95 * Math.pow(10, -16);
-    	newMove = (.51 * Math.pow(move, 3)) + (ECONSTANT * Math.pow(move, 2)) + (.47 * move) - 3.99;
-        //double newMove = Math.pow(move, 3);
-        //double newRotate = Math.pow(rotate, 3);
-        robotDrive.arcadeDrive(newMove, rotate);
+    	double newMove = (.51 * Math.pow(move, 3)) + (ECONSTANT * Math.pow(move, 2)) + (.47 * move) - 3.99;
+    	robotDrive.arcadeDrive(newMove, rotate);
     }
 
     public void driveStraight(double speed) {
