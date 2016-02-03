@@ -77,7 +77,38 @@ public class DriveTrain extends Subsystem {
     public void cubicArcadeDrive(Joystick stick) {
         cubicAracdeDrive(stick.getY(), stick.getX());
     }
-
+    
+    /**
+     * Takes arcade driving values and uses them as keys in a hashtable for a custom sensitivity
+     */
+    /*public void customArcadeDrive(double move, double rotate, Joystick stick) {
+    	Hashtable<Double, Double> ht = new Hashtable<Double, Double>();
+ *   			ht.put(0.0,0.0);
+ *  			ht.put(0.1,0.1);
+ * 	    		ht.put(0.2,0.1);
+ *  			ht.put(0.3,0.2);
+ *   			ht.put(0.4,0.2);
+ *   			ht.put(0.5,0.3);
+ *    			ht.put(0.6,0.4);
+ *   			ht.put(0.7,0.5);
+ *   			ht.put(0.9,0.8);
+ *   			ht.put(1.0,1.0);
+ *   			ht.put(-1.0,-1.0);
+ *   			ht.put(-0.1,-0.1);
+ *   			ht.put(-0.2,-0.1);
+ *   			ht.put(-0.3,-0.2);
+ *   			ht.put(-0.4,-0.2);
+ *   			ht.put(-0.5,-0.3);
+ *   			ht.put(-0.6,-0.4);
+ *   			ht.put(-0.7,-0.5);
+ *   			ht.put(-0.8,-0.6);
+ *   			ht.put(-0.9,-0.8);
+ *   			
+ *   			
+ *  }
+ */
+    
+    
     /**
      * Takes arcade driving values and cubes them before sending the values to the robot.
      *
@@ -85,9 +116,12 @@ public class DriveTrain extends Subsystem {
      * @param rotate How much the bot is wanted to rotate.
      */
     public void cubicAracdeDrive(double move, double rotate) {
-        double newMove = Math.pow(move, 3);
-        double newRotate = Math.pow(rotate, 3);
-        robotDrive.arcadeDrive(newMove, newRotate);
+    	double newMove = move;
+    	final double ECONSTANT = 1.95 * Math.pow(10, -16);
+    	newMove = (.51 * Math.pow(move, 3)) + (ECONSTANT * Math.pow(move, 2)) + (.47 * move) - 3.99;
+        //double newMove = Math.pow(move, 3);
+        //double newRotate = Math.pow(rotate, 3);
+        robotDrive.arcadeDrive(newMove, rotate);
     }
 
     public void driveStraight(double speed) {
