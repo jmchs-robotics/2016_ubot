@@ -77,7 +77,7 @@ public class DriveTrain extends Subsystem {
     public void cubicArcadeDrive(Joystick stick) {
         cubicAracdeDrive(stick.getY(), stick.getX());
     }
-    
+
     /**
      * Takes arcade driving values and cubes them before sending the values to the robot.
      *
@@ -89,14 +89,14 @@ public class DriveTrain extends Subsystem {
         double newRotate = Math.pow(rotate, 3);
         robotDrive.arcadeDrive(newMove, newRotate);
     }
-    
+
     public void ericArcadeDrive(Joystick stick) {
     	ericArcadeDrive(stick.getY(), stick.getX());
     }
-    
+
     public void ericArcadeDrive(double move, double rotate) {
     	final double ECONSTANT = 1.95 * Math.pow(10, -16);
-    	double newMove = (.51 * Math.pow(move, 3)) + (ECONSTANT * Math.pow(move, 2)) + (.47 * move) - 3.99;
+    	double newMove = (.51 * Math.pow(move, 3)) + (ECONSTANT * Math.pow(move, 2)) + (.47 * move);
     	robotDrive.arcadeDrive(newMove, rotate);
     }
 
@@ -104,4 +104,3 @@ public class DriveTrain extends Subsystem {
     	robotDrive.tankDrive(speed, speed);
     }
 }
-
