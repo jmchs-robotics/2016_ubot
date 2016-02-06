@@ -90,8 +90,17 @@ public class DriveTrain extends Subsystem {
         robotDrive.arcadeDrive(newMove, newRotate);
     }
 
+    public void ericArcadeDrive(Joystick stick) {
+    	ericArcadeDrive(stick.getY(), stick.getX());
+    }
+
+    public void ericArcadeDrive(double move, double rotate) {
+    	final double ECONSTANT = 1.95 * Math.pow(10, -16);
+    	double newMove = (.51 * Math.pow(move, 3)) + (ECONSTANT * Math.pow(move, 2)) + (.47 * move);
+    	robotDrive.arcadeDrive(newMove, rotate);
+    }
+
     public void driveStraight(double speed) {
     	robotDrive.tankDrive(speed, speed);
     }
 }
-
