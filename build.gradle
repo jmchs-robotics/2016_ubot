@@ -7,41 +7,72 @@ buildscript {
 	}
   }
   dependencies {
-    classpath group: 'jaci.openrio.gradle', name: 'GradleRIO', version: '+'
+      classpath group: 'jaci.openrio.gradle', name: 'GradleRIO', version: '+', classifier: 'Toast'
+      classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M2'
   }
 }
 
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'eclipse'
+plugins {
+    id 'java'
+    id 'jacoco'
+}
+
 apply plugin: 'GradleRIO'
+apply plugin: 'org.junit.platform.gradle.plugin'
 
 sourceSets {
-  main {
-    java {
-      srcDir 'src'
+    main {
+        java {
+            srcDir 'src'
+        }
     }
-  }
+    test {
+        java {
+            srcDir 'test'
+        }
+    }
 }
 
-gradlerio.robotClass = 'org.usfirst.frc5933.ubot.Robot'
+repositories {
+    jcenter()
+    maven {
+        name = "Toast"
+        url = "http://dev.imjac.in/maven"
+    }
+    maven {
+        url  "http://dl.bintray.com/judgementcall5933/toast"
+    }
+}
+
+dependencies {
+    compile group: 'jaci.openrio.toast', name: 'Toast', version: '+'
+    toastModule 'org.usfirst.frc5933:controller_feedback:+'
+
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.0.0-M2'
+    testCompile 'org.junit.jupiter:junit-jupiter-engine:5.0.0-M2'
+}
+
 gradlerio.team = "5933" // JudgeMent Call
+gradlerio.deployFile = "toast/modules/${archivesBaseName}.jar"
 
-def robotManifest = {
-  attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
-  attributes 'Robot-Class': gradlerio.robotClass
+project.afterEvaluate {
+    def junit5Test = project.tasks.getByName('junitPlatformTest')
+
+    jacoco {
+        toolVersion = "0.7.6.201602180812"
+        applyTo junit5Test
+    }
+
+    project.task(type: JacocoReport, "junitPlatformJacocoReport", {
+        executionData junit5Test
+        sourceSets sourceSets.main
+        sourceDirectories = files("./src/main")
+        classDirectories = files("$buildDir/classes/main")
+        reports {
+            xml.enabled = true
+            xml.destination "${buildDir}/reports/jacoco/report.xml"
+            html.enabled = true
+        }
+    })
 }
 
-jar {
-  from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-  manifest robotManifest
-}
-
-task genJavadoc(type: Jar, dependsOn: javadoc) {
-  classifier = 'javadoc'
-  from javadoc.destinationDir
-}
-
-artifacts {
-  archives genJavadoc
-}
